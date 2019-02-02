@@ -157,6 +157,7 @@ public class Form extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(953, 966));
         setPreferredSize(new java.awt.Dimension(953, 966));
+        setResizable(false);
         setSize(new java.awt.Dimension(953, 966));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -171,8 +172,9 @@ public class Form extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 470, 800));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Ice Hockey Rink");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-5, 10, 950, -1));
 
         jLabel1.setText("Color");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, -1, 30));
