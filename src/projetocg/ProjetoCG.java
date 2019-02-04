@@ -15,8 +15,11 @@ import drawing.Drawer;
 import drawing.LineDrawingStrategy;
 import java.awt.Color;
 import java.awt.Frame;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.DrawerException;
 import model.DrawerOptions;
+import model.Point;
 import model.RendererOptions;
 
 public class ProjetoCG implements GLEventListener {
@@ -29,17 +32,16 @@ public class ProjetoCG implements GLEventListener {
     private LineDrawingStrategy lineStrategy;
     private boolean run = false;
     private Color color;
+    private RendererOptions roptions;
     
     public ProjetoCG(GLU glu, int width, int height, Drawer drawer, RendererOptions roptions) {
         this.glu = glu;
         this.width = width;
         this.height = height;
         this.drawer = drawer;
+        this.roptions = roptions;
         renderer = new ArenaRenderer(roptions, circleStrategy, lineStrategy);
     }
-
-    int rot = 0;
-    int factor = 1;
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -48,7 +50,9 @@ public class ProjetoCG implements GLEventListener {
             return;
         try {
             drawable.getGL().getGL2().glColor3ub((byte)color.getRed(), (byte)color.getGreen(), (byte)color.getBlue());
+            drawer.pushMatrix().translate(new Point(roptions.getMidX(), roptions.getMidY())).rotate(-roptions.getAngle()).translate(new Point(-roptions.getMidX(), -roptions.getMidY()));
             renderer.render();
+            drawer.popMatrix();
         } catch (DrawerException ex) {
             ex.printStackTrace();
         }

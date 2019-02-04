@@ -31,14 +31,13 @@ public class BresenhamLineStrategy extends LineDrawingStrategy {
         if (line.pi.x > line.pf.x) {
             line.crossSwap();
         }
-        int dx, dy, E, NE, d, x, y, yStep = line.pi.y > line.pf.y ? -1 : 1;
+        int dx, dy, E, NE, d, yStep = line.pi.y > line.pf.y ? -1 : 1;
         dx = (int) (line.pf.x - line.pi.x);
         dy = (int) (line.pf.y - line.pi.y);
         d = 2 * dy - dx;
         E = 2 * dy;
         NE = 2 * (dy - dx);
-        x = (int) line.pi.x;
-        y = (int) line.pi.y;
+        double x = line.pi.x, y = line.pi.y;
         if (steep) {
             drawer.drawPoint(new Point(y, x));
         } else {

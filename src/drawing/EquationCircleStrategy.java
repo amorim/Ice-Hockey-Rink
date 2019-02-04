@@ -13,29 +13,19 @@ import model.Point;
  *
  * @author Lucas Amorim
  */
-public class BresenhamCircleStrategy extends CircleDrawingStrategy {
+public class EquationCircleStrategy extends CircleDrawingStrategy {
 
-    public BresenhamCircleStrategy(Drawer drawer) {
+    public EquationCircleStrategy(Drawer drawer) {
         super(drawer);
     }
 
     @Override
     public void drawCircle(Circle circle, CircleDrawingConfig config) throws DrawerException {
         drawer.pushMatrix().translate(circle.center).beginShape();
-        int x = 0;
-        double y = circle.radius;
-        double d = (double) 5 / 4 - circle.radius;
-        drawQuadrants(new Point(x, y), config);
-        while (y > x) {
-            if (d < 0) {
-                d += 2 * x + 3;
-                x++;
-            } else {
-                d += 2 * (x - y) + 5;
-                x++;
-                y--;
-            }
+        double end = circle.radius / Math.sqrt(2) + 1;
+        for (double x = 0, y = circle.radius; x <= end; x++) {
             drawQuadrants(new Point(x, y), config);
+            y = Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(x, 2));
         }
         drawer.endShape().popMatrix();
     }

@@ -14,6 +14,7 @@ import com.jogamp.opengl.util.Animator;
 import drawing.BresenhamCircleStrategy;
 import drawing.BresenhamLineStrategy;
 import drawing.Drawer;
+import drawing.EquationCircleStrategy;
 import drawing.EquationLineStrategy;
 import java.awt.Color;
 import java.awt.Frame;
@@ -107,6 +108,7 @@ public class Form extends javax.swing.JFrame {
         updateThickness();
         updateAlgorithm();
         updateColor();
+        updateAngle();
         glListener.setDrawing(true);
     }
 
@@ -129,8 +131,13 @@ public class Form extends javax.swing.JFrame {
         } else {
             glListener.setLineStrategy(new EquationLineStrategy(drawer));
             // TODO: AINDA NAO TEMOS CIRCLE EQUATION
-            glListener.setCircleStrategy(new BresenhamCircleStrategy(drawer));
+            glListener.setCircleStrategy(new EquationCircleStrategy(drawer));
         }
+    }
+    
+    private void updateAngle() {
+        int angle = sliderRinkAngle.getValue();
+        roptions.setAngle(angle);
     }
 
     /**
@@ -153,6 +160,8 @@ public class Form extends javax.swing.JFrame {
         labelStatus = new java.awt.Label();
         comboBoxAlgorithm = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        sliderRinkAngle = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(953, 966));
@@ -177,10 +186,10 @@ public class Form extends javax.swing.JFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-5, 10, 950, -1));
 
         jLabel1.setText("Color");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, -1, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 190, -1, 30));
 
         jPanelShowSelectedColor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        getContentPane().add(jPanelShowSelectedColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 180, 30, 30));
+        getContentPane().add(jPanelShowSelectedColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 190, 30, 30));
 
         buttonPickColor.setText("Pick Color");
         buttonPickColor.addActionListener(new java.awt.event.ActionListener() {
@@ -188,7 +197,7 @@ public class Form extends javax.swing.JFrame {
                 buttonPickColorActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonPickColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 180, 130, 30));
+        getContentPane().add(buttonPickColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 190, 130, 30));
 
         sliderLineThickness.setMaximum(10);
         sliderLineThickness.setMinimum(1);
@@ -209,7 +218,7 @@ public class Form extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 660, 110, 50));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 760, 110, 50));
 
         labelStatus.setAlignment(java.awt.Label.CENTER);
         labelStatus.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -223,10 +232,22 @@ public class Form extends javax.swing.JFrame {
                 comboBoxAlgorithmActionPerformed(evt);
             }
         });
-        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 520, 180, -1));
+        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 620, 180, -1));
 
         jLabel4.setText("Algorithm");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 520, -1, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 620, -1, 20));
+
+        jLabel5.setText("Rink Angle");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 490, -1, 30));
+
+        sliderRinkAngle.setMaximum(179);
+        sliderRinkAngle.setValue(0);
+        sliderRinkAngle.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sliderRinkAngleStateChanged(evt);
+            }
+        });
+        getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 490, 270, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -250,6 +271,7 @@ public class Form extends javax.swing.JFrame {
         pointsUntilNow = 0;
         comboBoxAlgorithm.setSelectedIndex(0);
         sliderLineThickness.setValue(1);
+        sliderRinkAngle.setValue(0);
         color = Color.BLACK;
         updateColor();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -264,6 +286,10 @@ public class Form extends javax.swing.JFrame {
         color = newColor;
         updateColor();
     }//GEN-LAST:event_buttonPickColorActionPerformed
+
+    private void sliderRinkAngleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderRinkAngleStateChanged
+        updateAngle();
+    }//GEN-LAST:event_sliderRinkAngleStateChanged
 
     /**
      * @param args the command line arguments
@@ -320,10 +346,12 @@ public class Form extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelShowSelectedColor;
     private java.awt.Label labelStatus;
     private javax.swing.JSlider sliderLineThickness;
+    private javax.swing.JSlider sliderRinkAngle;
     // End of variables declaration//GEN-END:variables
 
 }

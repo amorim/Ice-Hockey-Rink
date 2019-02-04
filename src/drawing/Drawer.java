@@ -85,6 +85,13 @@ public class Drawer {
         return this;
     }
     
+    public Drawer rotate(double angle) throws DrawerException {
+        if (drawingShapeNow)
+            throw new DrawerException("Can't operate transformation matrices while drawing is in course.");
+        gl.glRotated(angle, 0, 0, 1);
+        return this;
+    }
+    
     
     
 }

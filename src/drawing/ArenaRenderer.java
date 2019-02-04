@@ -27,13 +27,7 @@ public class ArenaRenderer {
         this.options = options;
     }
     
-    private double getMidX() {
-        return (options.startPoints[0].x + options.startPoints[1].x) / 2;
-    }
     
-    private double getMidY() {
-        return (options.startPoints[0].y + options.startPoints[1].y) / 2;
-    }
     
     private void borders() throws DrawerException {
         // draw arena lines
@@ -71,7 +65,7 @@ public class ArenaRenderer {
     
     private void lines() throws DrawerException {
         // center line
-        double mid = getMidY();
+        double mid = options.getMidY();
         Point p = new Point(options.startPoints[0].x, mid);
         Point p2 = new Point(options.startPoints[1].x, mid);
         lineStrategy.drawLine(new Line(p, p2));
@@ -97,17 +91,17 @@ public class ArenaRenderer {
     private void circles() throws DrawerException {
         CircleDrawingConfig config = new CircleDrawingConfig();
         config.drawEntireCircle();
-        double radius = (zoneY + getMidY()) / 2 - getMidY();
-        Circle c = new Circle(new Point(getMidX(), getMidY()), radius);
+        double radius = (zoneY + options.getMidY()) / 2 - options.getMidY();
+        Circle c = new Circle(new Point(options.getMidX(), options.getMidY()), radius);
         circleStrategy.drawCircle(c, config);
         double goalLineOffsetLow = options.startPoints[1].y + options.borderRadius;
         double goalLineOffsetHigh = options.startPoints[0].y - options.borderRadius;
-        double goalDifferenceYLow = (getMidY() - (zoneY - getMidY()) - goalLineOffsetLow) / 3;
+        double goalDifferenceYLow = (options.getMidY() - (zoneY - options.getMidY()) - goalLineOffsetLow) / 3;
         double goalDifferenceYHigh = (goalLineOffsetHigh - zoneY) / 3;
         double lowCirclesY = goalLineOffsetLow + goalDifferenceYLow;
         double highCirclesY = goalLineOffsetHigh - goalDifferenceYHigh;
-        double circle1X = (getMidX() + options.startPoints[0].x) / 2;
-        double circle2X = (getMidX() + options.startPoints[1].x) / 2;
+        double circle1X = (options.getMidX() + options.startPoints[0].x) / 2;
+        double circle2X = (options.getMidX() + options.startPoints[1].x) / 2;
         c.center = new Point(circle1X, lowCirclesY);
         circleStrategy.drawCircle(c, config);
         c.center = new Point(circle2X, lowCirclesY);
@@ -117,14 +111,15 @@ public class ArenaRenderer {
         c.center = new Point(circle2X, highCirclesY);
         circleStrategy.drawCircle(c, config);
         config.reset().drawQuadrant(1).drawQuadrant(2);
-        c.center = new Point(getMidX(), goalLineOffsetLow);
+        c.center = new Point(options.getMidX(), goalLineOffsetLow);
         circleStrategy.drawCircle(c, config);
         config.reset().drawQuadrant(3).drawQuadrant(4);
-        c.center = new Point(getMidX(), goalLineOffsetHigh);
+        c.center = new Point(options.getMidX(), goalLineOffsetHigh);
         circleStrategy.drawCircle(c, config);
     }
     
     public void render() throws DrawerException {
+        
         borders();
         lines();
         circles();
