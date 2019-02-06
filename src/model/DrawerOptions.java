@@ -26,6 +26,6 @@ public class DrawerOptions {
         this.squareSize = squareSize;
     }
     
-    private double squareSize;
+    public double squareSize;
 
 }

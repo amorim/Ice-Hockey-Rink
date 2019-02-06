@@ -22,44 +22,53 @@ public class BresenhamLineStrategy extends LineDrawingStrategy {
 
     @Override
     public void drawLine(Line line) throws DrawerException {
+        double t = Math.atan(-(line.pi.x - line.pf.x) / (line.pi.y - line.pf.y));
+        Point perpendicularVector = new Point(Math.cos(t), Math.sin(t));
+        double penWidth = drawer.options.getSquareSize();
         drawer.beginShape();
-        Line aux = line.cloneLine();
-        boolean steep = Math.abs(line.pf.y - line.pi.y) > Math.abs(line.pf.x - line.pi.x);
-        if (steep) {
-            line.pi.swap();
-            line.pf.swap();
-        }
-        if (line.pi.x > line.pf.x) {
-            line.crossSwap();
-        }
-        double dx, dy, E, NE, d, yStep = (line.pi.y > line.pf.y) ? -1 : 1;
-        dx = (line.pf.x - line.pi.x);
-        dy = Math.abs(line.pf.y - line.pi.y);
-        d = 2 * dy - dx;
-        E = 2 * dy;
-        NE = 2 * (dy - dx);
-        double x = line.pi.x, y = line.pi.y;
-        if (steep) {
-            drawer.drawPoint(new Point(y, x));
-        } else {
-            drawer.drawPoint(new Point(x, y));
-        }
-        while (x < line.pf.x) {
-            if (d <= 0) {
-                d += E;
-                x++;
-            } else {
-                d += NE;
-                x++;
-                y += yStep;
+        for (int j = 0; j < penWidth; j ++) {
+            Line aux = line.cloneLine();
+            line.pi.x += (j - (penWidth - 1) / 2.0) * perpendicularVector.x;
+            line.pf.x += (j - (penWidth - 1) / 2.0) * perpendicularVector.x;
+            line.pi.y += (j - (penWidth - 1) / 2.0) * perpendicularVector.y;
+            line.pf.y += (j - (penWidth - 1) / 2.0) * perpendicularVector.y;
+            boolean steep = Math.abs(line.pf.y - line.pi.y) > Math.abs(line.pf.x - line.pi.x);
+            if (steep) {
+                line.pi.swap();
+                line.pf.swap();
             }
+            if (line.pi.x > line.pf.x) {
+                line.crossSwap();
+            }
+            double dx, dy, E, NE, d, yStep = (line.pi.y > line.pf.y) ? -1 : 1;
+            dx = (line.pf.x - line.pi.x);
+            dy = Math.abs(line.pf.y - line.pi.y);
+            d = 2 * dy - dx;
+            E = 2 * dy;
+            NE = 2 * (dy - dx);
+            double x = line.pi.x, y = line.pi.y;
             if (steep) {
                 drawer.drawPoint(new Point(y, x));
             } else {
                 drawer.drawPoint(new Point(x, y));
             }
+            while (x < line.pf.x) {
+                if (d <= 0) {
+                    d += E;
+                    x++;
+                } else {
+                    d += NE;
+                    x++;
+                    y += yStep;
+                }
+                if (steep) {
+                    drawer.drawPoint(new Point(y, x));
+                } else {
+                    drawer.drawPoint(new Point(x, y));
+                }
+            }
+            line = aux.cloneLine();
         }
-        line = aux.cloneLine();
         drawer.endShape();
     }
 

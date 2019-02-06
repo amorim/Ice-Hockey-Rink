@@ -33,7 +33,7 @@ public class Drawer {
     public Drawer beginShape() throws DrawerException {
         if (drawingShapeNow)
             throw new DrawerException("You are already drawing a shape, please finish it before creating other shapes.");        
-        gl.glPointSize((float) options.getSquareSize());
+        // gl.glPointSize((float) options.getSquareSize());
         gl.glBegin(GL2.GL_POINTS);
         drawingShapeNow = true;
         return this;
