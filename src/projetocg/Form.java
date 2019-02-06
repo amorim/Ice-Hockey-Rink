@@ -5,29 +5,36 @@
  */
 package projetocg;
 
-import com.jogamp.newt.event.MouseEvent;
+import util.AppState;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
-import drawing.BresenhamCircleStrategy;
-import drawing.BresenhamLineStrategy;
+import drawing.strategy.BresenhamCircleStrategy;
+import drawing.strategy.BresenhamLineStrategy;
 import drawing.Drawer;
-import drawing.EquationCircleStrategy;
-import drawing.EquationLineStrategy;
+import drawing.strategy.EquationCircleStrategy;
+import drawing.strategy.EquationLineStrategy;
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.MouseButton;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.DrawerOptions;
+import model.Grandstand;
+import model.Line;
 import model.Point;
 import model.RendererOptions;
+import util.Util;
 
 /**
  *
@@ -36,6 +43,8 @@ import model.RendererOptions;
 public class Form extends javax.swing.JFrame {
 
     Point[] ps = new Point[2];
+    AppState state = AppState.WAITING_RINK_POINTS;
+    ArrayList<Grandstand> grandstands;
     int pointsUntilNow = 0, width, height;
     DrawerOptions doptions = new DrawerOptions();
     Drawer drawer = new Drawer(doptions);
@@ -43,21 +52,47 @@ public class Form extends javax.swing.JFrame {
     ProjetoCG glListener;
     Color color = Color.BLACK;
     private static final String helpText = "Please pick two points in the canvas using your mouse.";
+    private static final String grandstandText = "<html>Click where you want the vertices of your grandstands to be.<br>When you're finished, press the right button of your mouse.</html>";
+    
 
     public Form() {
         initComponents();
+        grandstands = new ArrayList<>();
         final GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities capabilities = new GLCapabilities(profile);
         width = jPanel1.getWidth();
         height = jPanel1.getHeight();
         final GLCanvas glcanvas = new GLCanvas(capabilities);
-        glListener = new ProjetoCG(new GLU(), width, height, drawer, roptions);
+        glListener = new ProjetoCG(new GLU(), width, height, drawer, roptions, grandstands);
         updateColor();
         glcanvas.setSize(width, height);
         glcanvas.addGLEventListener(glListener);
         glcanvas.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (state == AppState.WAITING_GRANDSTAND_POINTS) {
+                    if (grandstands.isEmpty()) {
+                        grandstands.add(new Grandstand());
+                    }
+                    Grandstand g = grandstands.get(grandstands.size() - 1);
+                    if (e.getButton() == MouseEvent.BUTTON3 && g.size() > 2) {
+                        if (Util.collision(grandstands, new Line(g.points.get(0), g.points.get(g.size() - 1)), ps, true)) {
+                            JOptionPane.showMessageDialog(Form.this, "Sorry, invalid shape.", "Intersection error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        g.add(g.points.get(0));
+                        grandstands.add(new Grandstand());
+                    }
+                    else if (e.getButton() == MouseEvent.BUTTON1) {
+                        if (g.points.size() > 0 && Util.collision(grandstands, new Line(new Point(e.getX(), height - e.getY()), g.points.get(g.points.size() - 1)), ps, false)) {
+                            JOptionPane.showMessageDialog(Form.this, "Your line would intersect other lines. Please select another point.", "Intersection error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        g.add(new Point(e.getX(), height - e.getY()));
+                    }
+                    return;
+                }
+
                 if (pointsUntilNow > 1) {
                     return;
                 }
@@ -72,6 +107,9 @@ public class Form extends javax.swing.JFrame {
                 if (pointsUntilNow == 2) {
                     startDraw();
                     labelStatus.setText("");
+                    state = AppState.WAITING_GRANDSTAND_POINTS;
+                    labelStatus.setText(grandstandText);
+                    roptions.setDrawGuide(true);
                 }
             }
 
@@ -96,6 +134,12 @@ public class Form extends javax.swing.JFrame {
             }
 
         });
+        glcanvas.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                roptions.setCursorPos(new Point(e.getX(), height - e.getY()));
+            }
+        });
         Animator animator = new Animator(glcanvas);
         jPanel1.add(glcanvas);
         animator.start();
@@ -114,13 +158,13 @@ public class Form extends javax.swing.JFrame {
 
     private void updateThickness() {
         int thickness = sliderLineThickness.getValue();
-        doptions.setPixelMode(thickness == 1);
         doptions.setSquareSize(thickness);
     }
-    
+
     private void updateColor() {
         jPanelShowSelectedColor.setBackground(color);
         glListener.setColor(color);
+        roptions.setColor(color);
     }
 
     private void updateAlgorithm() {
@@ -130,11 +174,10 @@ public class Form extends javax.swing.JFrame {
             glListener.setCircleStrategy(new BresenhamCircleStrategy(drawer));
         } else {
             glListener.setLineStrategy(new EquationLineStrategy(drawer));
-            // TODO: AINDA NAO TEMOS CIRCLE EQUATION
             glListener.setCircleStrategy(new EquationCircleStrategy(drawer));
         }
     }
-    
+
     private void updateAngle() {
         int angle = sliderRinkAngle.getValue();
         roptions.setAngle(angle);
@@ -157,11 +200,11 @@ public class Form extends javax.swing.JFrame {
         sliderLineThickness = new javax.swing.JSlider();
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        labelStatus = new java.awt.Label();
         comboBoxAlgorithm = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         sliderRinkAngle = new javax.swing.JSlider();
+        labelStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(953, 966));
@@ -170,7 +213,7 @@ public class Form extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(953, 966));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 800));
         jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -220,12 +263,6 @@ public class Form extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 760, 110, 50));
 
-        labelStatus.setAlignment(java.awt.Label.CENTER);
-        labelStatus.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        labelStatus.setForeground(new java.awt.Color(255, 51, 51));
-        labelStatus.setText("Please pick two points in the canvas using your mouse.");
-        getContentPane().add(labelStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 940, -1));
-
         comboBoxAlgorithm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bresenham", "Equation of Line/Circle" }));
         comboBoxAlgorithm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,6 +285,12 @@ public class Form extends javax.swing.JFrame {
             }
         });
         getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 490, 270, -1));
+
+        labelStatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        labelStatus.setForeground(new java.awt.Color(255, 51, 51));
+        labelStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelStatus.setText("Please pick two points in the canvas using your mouse.");
+        getContentPane().add(labelStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 940, 40));
 
         pack();
         setLocationRelativeTo(null);
@@ -274,15 +317,18 @@ public class Form extends javax.swing.JFrame {
         sliderRinkAngle.setValue(0);
         color = Color.BLACK;
         updateColor();
+        grandstands.clear();
+        state = AppState.WAITING_RINK_POINTS;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void buttonPickColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPickColorActionPerformed
         Color newColor = JColorChooser.showDialog(
-                     Form.this,
-                     "Choose a color for lines and circles",
-                     color);
-        if (newColor == null)
+                Form.this,
+                "Choose a color for lines and circles",
+                color);
+        if (newColor == null) {
             return;
+        }
         color = newColor;
         updateColor();
     }//GEN-LAST:event_buttonPickColorActionPerformed
@@ -349,7 +395,7 @@ public class Form extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelShowSelectedColor;
-    private java.awt.Label labelStatus;
+    private javax.swing.JLabel labelStatus;
     private javax.swing.JSlider sliderLineThickness;
     private javax.swing.JSlider sliderRinkAngle;
     // End of variables declaration//GEN-END:variables

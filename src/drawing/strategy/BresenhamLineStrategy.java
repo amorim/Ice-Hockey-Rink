@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package drawing;
+package drawing.strategy;
 
+import drawing.Drawer;
 import model.DrawerException;
 import model.Line;
 import model.Point;
@@ -13,15 +14,16 @@ import model.Point;
  *
  * @author Lucas Amorim
  */
-public class EquationLineStrategy extends LineDrawingStrategy {
+public class BresenhamLineStrategy extends LineDrawingStrategy {
 
-    public EquationLineStrategy(Drawer drawer) {
+    public BresenhamLineStrategy(Drawer drawer) {
         super(drawer);
     }
 
     @Override
     public void drawLine(Line line) throws DrawerException {
         drawer.beginShape();
+        Line aux = line.cloneLine();
         boolean steep = Math.abs(line.pf.y - line.pi.y) > Math.abs(line.pf.x - line.pi.x);
         if (steep) {
             line.pi.swap();
@@ -30,15 +32,34 @@ public class EquationLineStrategy extends LineDrawingStrategy {
         if (line.pi.x > line.pf.x) {
             line.crossSwap();
         }
-        double m = (line.pf.y - line.pi.y) / (line.pf.x - line.pi.x);
-        for (double x = line.pi.x, y = line.pi.y; x <= line.pf.x; x++) {
+        double dx, dy, E, NE, d, yStep = (line.pi.y > line.pf.y) ? -1 : 1;
+        dx = (line.pf.x - line.pi.x);
+        dy = Math.abs(line.pf.y - line.pi.y);
+        d = 2 * dy - dx;
+        E = 2 * dy;
+        NE = 2 * (dy - dx);
+        double x = line.pi.x, y = line.pi.y;
+        if (steep) {
+            drawer.drawPoint(new Point(y, x));
+        } else {
+            drawer.drawPoint(new Point(x, y));
+        }
+        while (x < line.pf.x) {
+            if (d <= 0) {
+                d += E;
+                x++;
+            } else {
+                d += NE;
+                x++;
+                y += yStep;
+            }
             if (steep) {
                 drawer.drawPoint(new Point(y, x));
             } else {
                 drawer.drawPoint(new Point(x, y));
             }
-            y = m * x + line.pi.y;
         }
+        line = aux.cloneLine();
         drawer.endShape();
     }
 

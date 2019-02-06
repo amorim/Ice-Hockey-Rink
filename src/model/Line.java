@@ -11,14 +11,22 @@ package model;
  */
 public class Line {
     public Point pi, pf;
+    public double alpha;
     
     public Line() {
-        
+        alpha = 0;
     }
     
     public Line(Point pi, Point pf) {
         this.pi = pi;
         this.pf = pf;
+        alpha = 0;
+    }
+    
+    public Line(Point pi, Point pf, double alpha) {
+        this.pi = pi;
+        this.pf = pf;
+        this.alpha = alpha;
     }
     
     public Line cloneLine() {

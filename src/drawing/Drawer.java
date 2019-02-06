@@ -7,6 +7,7 @@ package drawing;
 
 import model.DrawerException;
 import com.jogamp.opengl.GL2;
+import java.awt.Color;
 import model.DrawerOptions;
 import model.Point;
 
@@ -31,22 +32,14 @@ public class Drawer {
     
     public Drawer beginShape() throws DrawerException {
         if (drawingShapeNow)
-            throw new DrawerException("You are already drawing a shape, please finish it before creating other shapes.");
-        if (!options.shouldDrawPixel())
-            return this;
+            throw new DrawerException("You are already drawing a shape, please finish it before creating other shapes.");        
+        gl.glPointSize((float) options.getSquareSize());
         gl.glBegin(GL2.GL_POINTS);
         drawingShapeNow = true;
         return this;
     }
     
     public Drawer drawPoint(Point p) throws DrawerException {
-        if (!options.shouldDrawPixel()) {
-            if (drawingShapeNow)
-                throw new DrawerException("Can't draw rectangle while drawing a shape.");
-            double size = options.getSquareSize();
-            gl.glRectd(p.x - size, p.y - size, p.x + size, p.y + size);
-            return this;
-        }
         if (!drawingShapeNow)
             throw new DrawerException("Please call beginShape before drawing.");
         gl.glVertex2d(p.x, p.y);
@@ -54,9 +47,6 @@ public class Drawer {
     }
     
     public Drawer endShape() throws DrawerException {
-        if (!options.shouldDrawPixel()) {
-            return this;
-        }
         if (!drawingShapeNow)
             throw new DrawerException("Please call beginShape before ending a drawing.");
         gl.glEnd();
@@ -92,6 +82,12 @@ public class Drawer {
         return this;
     }
     
+    public Drawer color(Color color, byte alpha) throws DrawerException {
+        if (drawingShapeNow)
+            throw new DrawerException("Can't change color while drawing is in course.");
+        gl.glColor4ub((byte)color.getRed(), (byte)color.getGreen(), (byte)color.getRed(), alpha);
+        return this;
+    }
     
     
 }

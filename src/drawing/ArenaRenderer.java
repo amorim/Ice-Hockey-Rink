@@ -5,8 +5,14 @@
  */
 package drawing;
 
+import drawing.strategy.CircleDrawingStrategy;
+import drawing.strategy.LineDrawingStrategy;
+import java.awt.MouseInfo;
+import java.util.ArrayList;
+import model.CircleDrawingConfig;
 import model.Circle;
 import model.DrawerException;
+import model.Grandstand;
 import model.Line;
 import model.Point;
 import model.RendererOptions;
@@ -20,11 +26,16 @@ public class ArenaRenderer {
     private LineDrawingStrategy lineStrategy;
     private RendererOptions options;
     private double zoneY = 0;
+    private ArrayList<Grandstand> grandstands;
+    Drawer drawer;
     
-    public ArenaRenderer(RendererOptions options, CircleDrawingStrategy circleStrategy, LineDrawingStrategy lineStrategy) {
+    public ArenaRenderer(RendererOptions options, CircleDrawingStrategy circleStrategy, LineDrawingStrategy lineStrategy,
+            ArrayList<Grandstand> grandstands, Drawer drawer) {
         this.circleStrategy = circleStrategy;
         this.lineStrategy = lineStrategy;
         this.options = options;
+        this.grandstands = grandstands;
+        this.drawer = drawer;
     }
     
     
@@ -118,11 +129,37 @@ public class ArenaRenderer {
         circleStrategy.drawCircle(c, config);
     }
     
+    private void grandstands() throws DrawerException {
+        for (Grandstand g: grandstands) {
+            if (g.size() == 0)
+                continue;
+            ArrayList<Point> points = g.points;
+            for (int i = 1; i < points.size(); i++) {
+                lineStrategy.drawLine(new Line(points.get(i - 1).clonePoint(), points.get(i).clonePoint()));
+            }
+        }
+    }
+    
+    private void grandStandGuide() throws DrawerException {
+        if (!options.shouldDrawGuide())
+            return;
+        if (grandstands.isEmpty())
+            return;
+        Grandstand g = grandstands.get(grandstands.size() - 1);
+        if (g.size() == 0)
+            return;
+        Point p = g.get(g.size() - 1);      
+        drawer.color(options.getColor(), (byte)64);
+        lineStrategy.drawLine(new Line(p.clonePoint(), options.getCursorPos().clonePoint()));
+        drawer.color(options.getColor(), (byte)0);
+    }
+    
     public void render() throws DrawerException {
-        
+        grandstands();
         borders();
         lines();
         circles();
+        grandStandGuide();
     }
 
     public void updateLineStrategy(LineDrawingStrategy lineStrategy) {
@@ -132,4 +169,5 @@ public class ArenaRenderer {
     public void updateCircleStrategy(CircleDrawingStrategy circleStrategy) {
         this.circleStrategy = circleStrategy;
     }
+
 }

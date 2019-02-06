@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.awt.Color;
+
 /**
  *
  * @author Lucas Amorim
@@ -13,6 +15,9 @@ public class RendererOptions {
     public Point[] startPoints;
     public double borderRadius;
     private int angle;
+    private boolean drawGuide;
+    private Point cursorPos;
+    private Color color;
     
     public RendererOptions(Point[] startPoiints, double borderRadius) {
         this.startPoints = startPoiints;
@@ -43,5 +48,47 @@ public class RendererOptions {
      */
     public void setAngle(int angle) {
         this.angle = angle;
+    }
+
+    /**
+     * @return the drawGuide
+     */
+    public boolean shouldDrawGuide() {
+        return drawGuide;
+    }
+
+    /**
+     * @param drawGuide the drawGuide to set
+     */
+    public void setDrawGuide(boolean drawGuide) {
+        this.drawGuide = drawGuide;
+    }
+
+    /**
+     * @return the cursorPos
+     */
+    public Point getCursorPos() {
+        return cursorPos;
+    }
+
+    /**
+     * @param cursorPos the cursorPos to set
+     */
+    public void setCursorPos(Point cursorPos) {
+        this.cursorPos = cursorPos;
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

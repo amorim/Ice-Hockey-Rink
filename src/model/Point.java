@@ -27,7 +27,7 @@ public class Point {
     
     public void swap() {
         double temp = this.y;
-        this.y = x;
+        this.y = this.x;
         this.x = temp;
     }
 }

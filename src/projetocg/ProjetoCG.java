@@ -10,15 +10,17 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 import drawing.ArenaRenderer;
-import drawing.CircleDrawingStrategy;
+import drawing.strategy.CircleDrawingStrategy;
 import drawing.Drawer;
-import drawing.LineDrawingStrategy;
+import drawing.strategy.LineDrawingStrategy;
 import java.awt.Color;
 import java.awt.Frame;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.DrawerException;
 import model.DrawerOptions;
+import model.Grandstand;
 import model.Point;
 import model.RendererOptions;
 
@@ -33,14 +35,16 @@ public class ProjetoCG implements GLEventListener {
     private boolean run = false;
     private Color color;
     private RendererOptions roptions;
+    private ArrayList<Grandstand> grandstands;
     
-    public ProjetoCG(GLU glu, int width, int height, Drawer drawer, RendererOptions roptions) {
+    public ProjetoCG(GLU glu, int width, int height, Drawer drawer, RendererOptions roptions, ArrayList<Grandstand> grandstands) {
         this.glu = glu;
         this.width = width;
         this.height = height;
         this.drawer = drawer;
         this.roptions = roptions;
-        renderer = new ArenaRenderer(roptions, circleStrategy, lineStrategy);
+        this.grandstands = grandstands;
+        renderer = new ArenaRenderer(roptions, circleStrategy, lineStrategy, grandstands, drawer);
     }
 
     @Override
@@ -68,7 +72,10 @@ public class ProjetoCG implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         float color = 240.0f/255.0f;
         gl.glClearColor(color, color, color, 0.0f);
+        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL2.GL_BLEND);
         glu.gluOrtho2D(0, width, 0, height);
+        
         drawer.setGL2(gl);
     }
 
