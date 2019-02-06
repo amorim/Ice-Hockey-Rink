@@ -24,10 +24,14 @@ public class EquationCircleStrategy extends CircleDrawingStrategy {
     @Override
     public void drawCircle(Circle circle, CircleDrawingConfig config) throws DrawerException {
         drawer.pushMatrix().translate(circle.center).beginShape();
-        double end = circle.radius / Math.sqrt(2) + 1;
-        for (double x = 0, y = circle.radius; x <= end; x++) {
-            drawQuadrants(new Point(x, y), config);
-            y = Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(x, 2));
+        double penWidth = drawer.options.getSquareSize();
+        for (int j = 0; j < penWidth; j ++) {
+            double r = circle.radius + (j - (penWidth - 1) / 2.0);
+            double end = r / Math.sqrt(2) + 1;
+            for (double x = 0, y = r; x <= end; x++) {
+                drawQuadrants(new Point(x, y), config);
+                y = Math.sqrt(Math.pow(r, 2) - Math.pow(x, 2));
+            }
         }
         drawer.endShape().popMatrix();
     }
