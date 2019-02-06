@@ -17,14 +17,14 @@ import drawing.Drawer;
 import drawing.strategy.EquationCircleStrategy;
 import drawing.strategy.EquationLineStrategy;
 import java.awt.Color;
-import java.awt.Frame;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.input.MouseButton;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -52,7 +52,7 @@ public class Form extends javax.swing.JFrame {
     ProjetoCG glListener;
     Color color = Color.BLACK;
     private static final String helpText = "Please pick two points in the canvas using your mouse.";
-    private static final String grandstandText = "<html>Click where you want the vertices of your grandstands to be.<br>When you're finished, press the right button of your mouse.</html>";
+    private static final String grandstandText = "<html><center>Click where you want the vertices of your grandstands to be.<br>When you're finished, press the right button of your mouse. You can remove vertices of your current grandstand pressing r in your keyboard.</center></html>";
     
 
     public Form() {
@@ -139,6 +139,30 @@ public class Form extends javax.swing.JFrame {
             public void mouseMoved(MouseEvent e) {
                 roptions.setCursorPos(new Point(e.getX(), height - e.getY()));
             }
+        });
+        glcanvas.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_R) {
+                    if (grandstands.isEmpty())
+                        return;
+                    Grandstand g = grandstands.get(grandstands.size() - 1);
+                    if (g.size() < 1)
+                        return;
+                    g.points.remove(g.size() - 1);
+                }
+            }
+            
         });
         Animator animator = new Animator(glcanvas);
         jPanel1.add(glcanvas);
