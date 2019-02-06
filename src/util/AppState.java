@@ -10,5 +10,5 @@ package util;
  * @author Lucas Amorim
  */
 public enum AppState {
-    WAITING_RINK_POINTS, WAITING_GRANDSTAND_POINTS;
+    WAITING_RINK_POINTS, WAITING_GRANDSTAND_POINTS, WAITING_ROTATION_ZERO;
 }

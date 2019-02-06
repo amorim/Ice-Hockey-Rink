@@ -112,7 +112,6 @@
     </Component>
     <Component class="javax.swing.JSlider" name="sliderLineThickness">
       <Properties>
-        <Property name="maximum" type="int" value="10"/>
         <Property name="minimum" type="int" value="1"/>
         <Property name="value" type="int" value="1"/>
       </Properties>

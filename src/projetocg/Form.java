@@ -53,6 +53,7 @@ public class Form extends javax.swing.JFrame {
     Color color = Color.BLACK;
     private static final String helpText = "Please pick two points in the canvas using your mouse.";
     private static final String grandstandText = "<html><center>Click where you want the vertices of your grandstands to be.<br>When you're finished, press the right button of your mouse. You can remove vertices of your current grandstand pressing r in your keyboard.</center></html>";
+    private static final String noGrandstandText = "Grandstand drawing disabled while angle isn't zero.";
     
 
     public Form() {
@@ -137,7 +138,8 @@ public class Form extends javax.swing.JFrame {
         glcanvas.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                roptions.setCursorPos(new Point(e.getX(), height - e.getY()));
+                if (state == AppState.WAITING_GRANDSTAND_POINTS)
+                    roptions.setCursorPos(new Point(e.getX(), height - e.getY()));
             }
         });
         glcanvas.addKeyListener(new KeyListener() {
@@ -205,6 +207,15 @@ public class Form extends javax.swing.JFrame {
     private void updateAngle() {
         int angle = sliderRinkAngle.getValue();
         roptions.setAngle(angle);
+        if (angle > 0 && state == AppState.WAITING_GRANDSTAND_POINTS) {
+            state = AppState.WAITING_ROTATION_ZERO;
+            labelStatus.setText(noGrandstandText);
+        }
+        
+        if (angle == 0 && state == AppState.WAITING_ROTATION_ZERO) {
+            state = AppState.WAITING_GRANDSTAND_POINTS;
+            labelStatus.setText(grandstandText);
+        }
     }
 
     /**
@@ -266,7 +277,6 @@ public class Form extends javax.swing.JFrame {
         });
         getContentPane().add(buttonPickColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 190, 130, 30));
 
-        sliderLineThickness.setMaximum(10);
         sliderLineThickness.setMinimum(1);
         sliderLineThickness.setValue(1);
         sliderLineThickness.addChangeListener(new javax.swing.event.ChangeListener() {

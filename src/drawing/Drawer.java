@@ -19,7 +19,7 @@ import model.Point;
 public class Drawer {
     private GL2 gl;
     private boolean drawingShapeNow = false;
-    private DrawerOptions options;
+    public DrawerOptions options;
     
     public Drawer(DrawerOptions options) {
         this.options = options;
