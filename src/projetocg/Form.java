@@ -242,10 +242,9 @@ public class Form extends javax.swing.JFrame {
         labelStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(953, 966));
-        setPreferredSize(new java.awt.Dimension(953, 966));
-        setResizable(false);
-        setSize(new java.awt.Dimension(953, 966));
+        setMinimumSize(new java.awt.Dimension(953, 702));
+        setPreferredSize(new java.awt.Dimension(953, 702));
+        setSize(new java.awt.Dimension(953, 702));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -256,7 +255,7 @@ public class Form extends javax.swing.JFrame {
             }
         });
         jPanel1.setLayout(new java.awt.BorderLayout());
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 470, 800));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 470, 540));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -264,10 +263,10 @@ public class Form extends javax.swing.JFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-5, 10, 950, -1));
 
         jLabel1.setText("Color");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 190, -1, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 120, -1, 30));
 
         jPanelShowSelectedColor.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        getContentPane().add(jPanelShowSelectedColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 190, 30, 30));
+        getContentPane().add(jPanelShowSelectedColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 30, 30));
 
         buttonPickColor.setText("Pick Color");
         buttonPickColor.addActionListener(new java.awt.event.ActionListener() {
@@ -275,7 +274,7 @@ public class Form extends javax.swing.JFrame {
                 buttonPickColorActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonPickColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 190, 130, 30));
+        getContentPane().add(buttonPickColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 120, 130, 30));
 
         sliderLineThickness.setMinimum(1);
         sliderLineThickness.setValue(1);
@@ -284,10 +283,10 @@ public class Form extends javax.swing.JFrame {
                 sliderLineThicknessStateChanged(evt);
             }
         });
-        getContentPane().add(sliderLineThickness, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 350, 280, -1));
+        getContentPane().add(sliderLineThickness, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 220, 280, -1));
 
         jLabel3.setText("Line Thickness");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 350, -1, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 220, -1, 30));
 
         jButton1.setText("Reset");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -295,7 +294,7 @@ public class Form extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 760, 110, 50));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 420, 110, 50));
 
         comboBoxAlgorithm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bresenham", "Equation of Line/Circle" }));
         comboBoxAlgorithm.addActionListener(new java.awt.event.ActionListener() {
@@ -303,13 +302,13 @@ public class Form extends javax.swing.JFrame {
                 comboBoxAlgorithmActionPerformed(evt);
             }
         });
-        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 620, 180, -1));
+        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 350, 180, -1));
 
         jLabel4.setText("Algorithm");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 620, -1, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 350, -1, 20));
 
         jLabel5.setText("Rink Angle");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 490, -1, 30));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 280, -1, 30));
 
         sliderRinkAngle.setMaximum(179);
         sliderRinkAngle.setValue(0);
@@ -318,7 +317,7 @@ public class Form extends javax.swing.JFrame {
                 sliderRinkAngleStateChanged(evt);
             }
         });
-        getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 490, 270, -1));
+        getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 280, 270, -1));
 
         labelStatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelStatus.setForeground(new java.awt.Color(255, 51, 51));
