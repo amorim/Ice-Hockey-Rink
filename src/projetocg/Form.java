@@ -207,7 +207,7 @@ public class Form extends javax.swing.JFrame {
     private void updateAngle() {
         int angle = sliderRinkAngle.getValue();
         roptions.setAngle(angle);
-        if (angle > 0 && state == AppState.WAITING_GRANDSTAND_POINTS) {
+        if (angle != 0 && state == AppState.WAITING_GRANDSTAND_POINTS) {
             state = AppState.WAITING_ROTATION_ZERO;
             labelStatus.setText(noGrandstandText);
         }
@@ -240,6 +240,7 @@ public class Form extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         sliderRinkAngle = new javax.swing.JSlider();
         labelStatus = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(953, 702));
@@ -294,7 +295,7 @@ public class Form extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 420, 110, 50));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 490, 110, 50));
 
         comboBoxAlgorithm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bresenham", "Equation of Line/Circle" }));
         comboBoxAlgorithm.addActionListener(new java.awt.event.ActionListener() {
@@ -302,28 +303,37 @@ public class Form extends javax.swing.JFrame {
                 comboBoxAlgorithmActionPerformed(evt);
             }
         });
-        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 350, 180, -1));
+        getContentPane().add(comboBoxAlgorithm, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 400, 180, -1));
 
         jLabel4.setText("Algorithm");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 350, -1, 20));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 400, -1, 20));
 
         jLabel5.setText("Rink Angle");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 280, -1, 30));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 300, -1, 30));
 
-        sliderRinkAngle.setMaximum(179);
+        sliderRinkAngle.setMaximum(180);
+        sliderRinkAngle.setMinimum(-180);
         sliderRinkAngle.setValue(0);
         sliderRinkAngle.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderRinkAngleStateChanged(evt);
             }
         });
-        getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 280, 270, -1));
+        getContentPane().add(sliderRinkAngle, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 300, 270, -1));
 
         labelStatus.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelStatus.setForeground(new java.awt.Color(255, 51, 51));
         labelStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelStatus.setText("Please pick two points in the canvas using your mouse.");
         getContentPane().add(labelStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 940, 40));
+
+        jButton2.setText("Reset Angle");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 330, 110, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -369,6 +379,11 @@ public class Form extends javax.swing.JFrame {
     private void sliderRinkAngleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sliderRinkAngleStateChanged
         updateAngle();
     }//GEN-LAST:event_sliderRinkAngleStateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        sliderRinkAngle.setValue(0);
+        updateAngle();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -421,6 +436,7 @@ public class Form extends javax.swing.JFrame {
     private javax.swing.JButton buttonPickColor;
     private javax.swing.JComboBox<String> comboBoxAlgorithm;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
